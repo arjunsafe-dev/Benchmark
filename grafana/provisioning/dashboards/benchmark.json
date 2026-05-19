@@ -1,0 +1,82 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "IO (packets/sec)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        { "expr": "rate(rust_packets_total[10s])", "legendFormat": "Rust IO", "range": true },
+        { "expr": "rate(go_packets_total[10s])", "legendFormat": "Go IO", "range": true }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "smooth" },
+          "unit": "pps"
+        }
+      }
+    },
+    {
+      "title": "Memory (RSS bytes)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        { "expr": "process_resident_memory_bytes{job='rust'}", "legendFormat": "Rust RAM (RSS)", "range": true },
+        { "expr": "process_resident_memory_bytes{job='go'}", "legendFormat": "Go RAM (RSS)", "range": true }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line" },
+          "unit": "bytes"
+        }
+      }
+    },
+    {
+      "title": "CPU Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        { "expr": "rate(process_cpu_seconds_total{job='rust'}[10s]) * 100", "legendFormat": "Rust CPU %", "range": true },
+        { "expr": "rate(process_cpu_seconds_total{job='go'}[10s]) * 100", "legendFormat": "Go CPU %", "range": true }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line" },
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "title": "Threads",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        { "expr": "process_threads{job='rust'}", "legendFormat": "Rust Threads", "range": true },
+        { "expr": "go_threads{job='go'}", "legendFormat": "Go Threads", "range": true }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "stepAfter" },
+          "unit": "none"
+        }
+      }
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["benchmark"],
+  "time": { "from": "now-5m", "to": "now" },
+  "title": "Rust vs Go",
+  "version": 1
+}
